@@ -6,6 +6,7 @@ class Carousel {
       interval: 3000,
       isPlaying: true,
     }, ...params };
+
     this.container = document.querySelector(`.${settings.containerClass}`);
     this.slideItems = this.container.querySelectorAll(`.${settings.slideClass}`);
     this.interval = settings.interval;
@@ -58,6 +59,8 @@ class Carousel {
     this.nextBtn.addEventListener('click', this.next.bind(this));
     this.indicatorsContainer.addEventListener('click', this._indiсateHandler.bind(this));
     document.addEventListener('keydown', this._pressKey.bind(this));
+    this.container.addEventListener('mouseenter', this.pause.bind(this));
+    this.container.addEventListener('mouseleave', this.play.bind(this));
   }
   _gotoNth(n) {
     this.slideItems[this.currentSlide].classList.toggle('active');
@@ -95,6 +98,7 @@ class Carousel {
     this.isPlaying = false;
   }
   play() {
+    if (this.isPlaying) return;
     this._tick();
     this.pLayPauseBtn.innerHTML = '<i class="fa-regular fa-circle-pause"></i>';
     this.isPlaying = true;
