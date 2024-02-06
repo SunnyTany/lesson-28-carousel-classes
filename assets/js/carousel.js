@@ -20,6 +20,11 @@ class Carousel {
     this.ARROW_LEFT = 37;
     this.ARROW_RIGHT = 39;
     this.SPACE = 32;
+
+    this.FA_PAUSE = '<i class="fa-regular fa-circle-pause"></i>';
+    this.FA_PLAY = '<i class="fa-regular fa-circle-play"></i>';
+    this.FA_PREV = '<i class="fa-solid fa-angles-left"></i>';
+    this.FA_NEXT = '<i class="fa-solid fa-angles-right"></i>';
   }
   _initIndicators() {
     const indicators = document.createElement('div');
@@ -41,9 +46,11 @@ class Carousel {
   }
   _initControls() {
     const controls = document.createElement('div');
-    const PAUSE = '<span class="slider__btn slider__play-pause-btn"><i class="fa-regular fa-circle-pause"></i></span>';
-    const PREV = '<span class="slider__btn slider__prev-btn"><i class="fa-solid fa-angles-left"></i></span>';
-    const NEXT = '<span class="slider__btn slider__next-btn"><i class="fa-solid fa-angles-right"></i></span>';
+    const PAUSE = `<span class="slider__btn slider__play-pause-btn">${
+      this.isPlaying ? this.FA_PAUSE : this.FA_PLAY
+    }</span>`;
+    const PREV = `<span class="slider__btn slider__prev-btn">${this.FA_PREV}</span>`;
+    const NEXT = `<span class="slider__btn slider__next-btn">${this.FA_NEXT}</span>`;
 
     controls.classList.add('slider__controls');
     controls.innerHTML = PREV + PAUSE + NEXT;
@@ -59,8 +66,10 @@ class Carousel {
     this.nextBtn.addEventListener('click', this.next.bind(this));
     this.indicatorsContainer.addEventListener('click', this._indiсateHandler.bind(this));
     document.addEventListener('keydown', this._pressKey.bind(this));
-    this.container.addEventListener('mouseenter', this.pause.bind(this));
-    this.container.addEventListener('mouseleave', this.play.bind(this));
+    this.slideItems.forEach(slide => {
+      slide.addEventListener('mouseenter', this.pause.bind(this));
+      slide.addEventListener('mouseleave', this.play.bind(this));
+    });
   }
   _gotoNth(n) {
     this.slideItems[this.currentSlide].classList.toggle('active');
@@ -99,9 +108,9 @@ class Carousel {
   }
   play() {
     if (this.isPlaying) return;
-    this._tick();
     this.pLayPauseBtn.innerHTML = '<i class="fa-regular fa-circle-pause"></i>';
     this.isPlaying = true;
+    this._tick();
   }
   pLayPause() {
     this.isPlaying ? this.pause() : this.play();
